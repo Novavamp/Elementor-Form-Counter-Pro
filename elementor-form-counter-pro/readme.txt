@@ -1,0 +1,1 @@
+Enhanced Elementor Form Counter plugin with export, animated counters, progress bar, dashboard widget.

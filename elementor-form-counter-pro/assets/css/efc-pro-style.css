@@ -1,0 +1,57 @@
+/* Base counter */
+.efc-pro-counter {
+	font-weight: 600;
+	font-size: 1.2rem;
+	display: inline-block; /* Ensures smooth animation */
+	white-space: nowrap; /* Prevent number wrap */
+}
+
+/* Templates */
+.efc-pro-minimal {
+	font-weight: 400;
+	font-size: 1.2rem;
+	transition: none;
+}
+.efc-pro-bold {
+	font-weight: 700;
+	font-size: 1.5rem;
+}
+.efc-pro-animated {
+	transition: transform 0.3s ease, color 0.3s ease;
+}
+
+/* Optional scale effect for JS animation */
+.efc-pro-animated.update {
+	transform: scale(1.2);
+}
+
+/* Progress bar */
+.efc-pro-progress {
+	max-width: 320px;
+	box-sizing: border-box; /* Prevent sizing issues */
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+}
+
+.efc-pro-bar {
+	background: #eee;
+	border-radius: 8px;
+	overflow: hidden;
+	height: 14px;
+	margin-bottom: 0; /* gap handled by parent flex */
+}
+
+.efc-pro-fill {
+	height: 14px;
+	width: 0;
+	background: linear-gradient(90deg, #4caf50, #8bc34a);
+	transition: width 0.6s ease;
+	border-radius: 8px 0 0 8px; /* Smooth edges */
+}
+
+.efc-pro-label {
+	font-size: 0.9rem;
+	text-align: center;
+	line-height: 14px;
+}
