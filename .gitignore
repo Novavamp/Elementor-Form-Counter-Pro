@@ -1,0 +1,19 @@
+# Operating system and editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Local archives and temporary packages
+*.log
+*.tmp
+*.bak
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+
+# Development dependencies
+vendor/
+node_modules/
