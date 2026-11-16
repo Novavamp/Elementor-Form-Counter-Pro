@@ -165,8 +165,37 @@ class Admin {
     public static function save_settings() {
         if ( ! current_user_can('manage_options') ) wp_die('Forbidden',403);
         if ( ! check_admin_referer('efc_pro_save_settings') ) wp_die('Invalid nonce',403);
-        $settings = isset($_POST['settings']) ? $_POST['settings'] : array();
-        update_option('efc_pro_settings', $settings);
+
+        $raw = isset($_POST['settings']) && is_array($_POST['settings'])
+            ? wp_unslash($_POST['settings'])
+            : array();
+        $settings = array();
+
+        $template = isset($raw['default_template']) ? sanitize_key($raw['default_template']) : 'minimal';
+        $settings['default_template'] = in_array($template, array('minimal', 'bold', 'animated'), true) ? $template : 'minimal';
+
+        $font_size = isset($raw['default_font_size']) ? trim((string) $raw['default_font_size']) : '';
+        $settings['default_font_size'] = preg_match('/^(?:[0-9]{1,3})(?:px|rem|em|%)$/', $font_size) ? $font_size : '';
+
+        $settings['default_font_color'] = isset($raw['default_font_color'])
+            ? (sanitize_hex_color($raw['default_font_color']) ?: '')
+            : '';
+
+        $font_family = isset($raw['default_font_family']) ? sanitize_text_field($raw['default_font_family']) : '';
+        $settings['default_font_family'] = preg_match('/^[a-zA-Z0-9 ,\'"-]{1,100}$/', $font_family) ? $font_family : '';
+
+        foreach ($raw as $key => $value) {
+            if (preg_match('/^milestone_target_[a-z0-9_-]+$/', (string) $key)) {
+                $settings[$key] = absint($value);
+            } elseif (preg_match('/^milestone_email_[a-z0-9_-]+$/', (string) $key)) {
+                $settings[$key] = ! empty($value) ? 1 : 0;
+            } elseif (preg_match('/^webhook_url_[a-z0-9_-]+$/', (string) $key)) {
+                $url = esc_url_raw($value);
+                $settings[$key] = $url && wp_http_validate_url($url) ? $url : '';
+            }
+        }
+
+        update_option('efc_pro_settings', $settings, false);
         wp_safe_redirect(admin_url('options-general.php?page=efc-pro-settings&saved=1'));
         exit;
     }
